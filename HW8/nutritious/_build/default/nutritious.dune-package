@@ -1,0 +1,4 @@
+(lang dune 3.15)
+(name nutritious)
+(sections (lib .) (bin ../../bin) (doc ../../doc/nutritious))
+(files (lib (META dune-package opam)) (bin (nutritious)) (doc (README.md)))

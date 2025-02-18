@@ -1,0 +1,43 @@
+type token =
+    WRITE
+  | WHILE
+  | UNIT
+  | TRUE
+  | TO
+  | THEN
+  | STAR
+  | SLASH
+  | SEMICOLON
+  | RP
+  | READ
+  | RBLOCK
+  | RB
+  | PROC
+  | PLUS
+  | NUM of int
+  | NOT
+  | MINUS
+  | LP
+  | LET
+  | LBLOCK
+  | LB
+  | IN
+  | IF
+  | ID of bytes
+  | FOR
+  | FALSE
+  | EQUAL
+  | EOF
+  | END
+  | ELSE
+  | DO
+  | COLONEQ
+type declLet =
+    Val of bytes * Sm5__K.program
+  | Fun of bytes * bytes * Sm5__K.program
+val desugarLet : declLet * Sm5__K.program -> Sm5__K.program
+val menhir_begin_marker : int
+val xv_program : Sm5__K.program
+val xv_expr : Sm5__K.program
+val xv_decl : declLet
+val menhir_end_marker : int

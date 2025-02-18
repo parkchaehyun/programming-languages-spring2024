@@ -1,0 +1,71 @@
+[Header]
+
+[Test]
+(* test 0 *)
+crazy3val (ZERO (ZERO (ZERO NIL)))
+
+[Value]
+0
+
+[Test]
+(* test 1 *)
+crazy3val (ONE (ZERO (ONE NIL)))
+
+[Value]
+10
+
+[Test]
+(* test 2 *)
+crazy3val (ONE (ZERO (MONE (ZERO NIL))))
+
+[Value]
+-8
+
+[Test]
+(* test 3 *)
+crazy3val (ONE (MONE (TWO (ZERO (MONE NIL)))))
+
+[Value]
+-65
+
+[Test]
+(* test 4 *)
+crazy3val (MTWO (ONE (MTWO (ONE (MONE NIL)))))
+
+[Value]
+-71
+
+[Test]
+(* test 5 *)
+crazy3val (MTWO (ONE (MTWO (ONE (MONE (MTWO (ONE (MTWO (ONE (MONE NIL))))))))))
+
+[Value]
+-17324
+
+[Test]
+(* test 6 *)
+crazy3val (TWO (ONE (MTWO (ONE (MONE (MTWO (ONE (MTWO (ONE (TWO NIL))))))))))
+
+[Value]
+41729
+
+[Test]
+(* test 7 *)
+crazy3val (TWO (TWO (TWO (TWO (TWO (TWO (TWO (TWO (TWO (TWO (MONE NIL)))))))))))
+
+[Value]
+-1
+
+[Test]
+(* test 8 *)
+crazy3val (TWO (TWO (TWO (TWO (TWO (TWO (TWO (TWO (TWO (TWO (ZERO NIL)))))))))))
+
+[Value]
+59048
+
+[Test]
+(* test 9 *)
+crazy3val (MTWO (MTWO (MTWO (MTWO (MTWO (MTWO (MTWO (MTWO (MTWO (MTWO (ONE NIL)))))))))))
+
+[Value]
+1

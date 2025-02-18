@@ -1,0 +1,230 @@
+[Header]
+open M_interp
+open M
+open Unix
+
+let stdout_redirect_f = "stdout_redirect.txt"
+let stdin_redirect_f = "stdin_redirect.txt"
+
+let read_all filename = 
+  let chan = open_in filename in 
+  let res = really_input_string chan (in_channel_length chan) in
+  let _ = close_in chan in 
+  res
+
+let test_run pgm_str input_str = 
+  (* Creating program *)
+  let lexbuf = Lexing.from_string pgm_str in
+  let pgm = Parser.program Lexer.start lexbuf in
+
+  (* Write testcase input string to a file *)
+  let chan = open_out stdin_redirect_f in
+  let _ = Printf.fprintf chan input_str in
+  let _ = close_out chan in
+
+  (* Stdin Redirection *)
+  let new_stdin = open_in stdin_redirect_f in
+  let _ = Unix.dup2 (Unix.descr_of_in_channel new_stdin) Unix.stdin in
+
+  (* Stdout Redirection *)
+  let new_stdout = open_out stdout_redirect_f in
+  let _ = Unix.dup2 (Unix.descr_of_out_channel new_stdout) Unix.stdout in
+
+  (* Run the translated program *)
+  let _ = M.run pgm in
+  
+  read_all stdout_redirect_f
+
+let test_type_err pgm_str = 
+  (* Creating program *)
+  let lexbuf = Lexing.from_string pgm_str in
+  let pgm = Parser.program Lexer.start lexbuf in
+  (* Run and check type error *)
+  try (let _ = M.run pgm in false) with 
+  | M.TypeError _ -> true
+  | exn -> raise exn
+
+[Test]
+(* 1 : write/read with seq/pair *)
+test_run
+
+"write((write 1) + read);write((read,read).1)"
+
+"2\n4\n8\n"
+
+[Value]
+"1\n3\n4\n"
+
+
+[Test]
+(* 2 allocation/dereference*)
+test_run 
+"let val x = malloc 15 in write(!x) end"
+""
+
+[Value]
+"15\n"
+
+
+[Test]
+(* 3 assignment and int op*)
+test_run 
+
+"
+let val x = malloc (2 + 3) in
+  x := 0 - 1; 
+  write (!x)
+end
+"
+
+""
+
+[Value]
+"-1\n"
+
+[Test]
+(* 4  alloc error *)
+test_type_err
+
+"
+let val x = malloc (3, false) in
+  if (x.2 or (x.1 = 4)) then
+    write (x.1 + x.2)
+  else
+    write x.1
+end
+"
+
+[Value]
+true
+
+[Test]
+(* 5 deref error *)
+test_type_err
+
+"
+let rec sum = fn x =>
+ if (x = 0) then 
+   0
+ else
+   (x + sum (x - 1))
+in
+  !(sum)
+end
+"
+
+[Value]
+true
+
+[Test]
+(* 6 loc in pair*)
+test_run
+
+"
+let val xx = malloc (4, (malloc 3, 2)) in
+  write ((!xx).1 +
+      !((!xx).2.1 := (fn xx => (malloc (xx.1))) ((fn yyy => (yyy , xx)) 6) ))
+end
+"
+
+""
+
+[Value]
+"10\n"
+
+[Test]
+(* 7 *)
+test_run 
+
+"
+let 
+  val x = (malloc (true, read), 6)
+in
+  let 
+    val y = (false, 1)
+  in
+    write ((!(x.1)).2);
+    x.1 := (true, read);
+    write ((!(x.1)).2);
+    (if (read = 0) then 
+      x.1 := (true, read)
+    else
+      x.1 := y);
+    write ((!(x.1)).2)
+  end
+end
+"
+
+"2\n5\n7\n"
+
+[Value]
+"2\n5\n1\n"
+
+
+[Test]
+(* 8 eq error*)
+test_type_err
+
+"
+let val a = malloc (0=0) in
+  let val b = malloc ((true and true) = true) in
+    let val c = (malloc(2) = malloc(2)) in
+        write((1,2) = (1,2))
+    end
+  end
+end
+"
+
+[Value]
+true
+
+[Test]
+(* 9 : recursion *)
+test_run
+
+"
+let 
+ rec sum = fn x => 
+   if (x = 0) then 
+     0
+   else
+     (x + sum (x - 1))
+ rec diag = fn x => 
+   if (x = 0) then 
+     0
+   else
+     (sum x + diag (x - 1))
+in
+  write (diag (sum 6))
+end
+"
+
+""
+
+[Value]
+"1771\n"
+
+
+[Test]
+(* 10 : recursion + high order function + scope *)
+test_run
+
+"
+let 
+  rec f = fn x => 3
+  rec f = fn x => 
+   (if (x = 0) then 
+    0
+   else
+    (x + (f (x - 1))))
+  val foo = fn f => f (9)
+in
+  false;write (foo f)
+end
+"
+
+""
+
+[Value]
+"45\n"
+

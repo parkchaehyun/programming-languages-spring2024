@@ -1,0 +1,4 @@
+(lang dune 3.15)
+(name sm5)
+(sections (lib .) (bin ../../bin) (doc ../../doc/sm5))
+(files (lib (META dune-package opam)) (bin (gc_test sm5)) (doc (README.md)))

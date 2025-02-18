@@ -1,0 +1,68 @@
+# dune build --release
+# OCAMLPARAM: unset
+# Shared cache: disabled
+# Shared cache location: /Users/park/.cache/dune/db
+# Workspace root:
+# "/Users/park/Library/CloudStorage/OneDrive-\225\132\128\225\133\162\225\132\139\225\133\181\225\134\171/\225\132\134\225\133\174\225\134\171\225\132\137\225\133\165/\225\132\137\225\133\174\225\132\139\225\133\165\225\134\184/2024-1/\225\132\145\225\133\179\225\132\133\225\133\169\225\132\128\225\133\179\225\132\133\225\133\162\225\132\134\225\133\181\225\134\188\225\132\139\225\133\165\225\134\171\225\132\139\225\133\165/2024/HW8/rozettax"
+# Auto-detected concurrency: 8
+# Dune context:
+#  { name = "default"
+#  ; kind = "default"
+#  ; profile = Release
+#  ; merlin = true
+#  ; fdo_target_exe = None
+#  ; build_dir = In_build_dir "default"
+#  ; instrument_with = []
+#  }
+$ /Users/park/.opam/4.02.3/bin/ocamlc.opt -config > /var/folders/md/r97yzzq11wsg7jl877gh8w8c0000gn/T/dune_1a04e2_output
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamldep.opt -modules -intf lib/sonata.mli) > _build/default/lib/.rozettax.objs/rozettax__Sonata.intf.d
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamldep.opt -modules -intf lib/sm5.mli) > _build/default/lib/.rozettax.objs/rozettax__Sm5.intf.d
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamldep.opt -modules -impl lib/sonata.ml) > _build/default/lib/.rozettax.objs/rozettax__Sonata.impl.d
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamldep.opt -modules -impl lib/translator.ml) > _build/default/lib/.rozettax.objs/rozettax__Translator.impl.d
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamldep.opt -modules -impl lib/parser.ml) > _build/default/lib/.rozettax.objs/rozettax__Parser.impl.d
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamldep.opt -modules -impl lib/sm5.ml) > _build/default/lib/.rozettax.objs/rozettax__Sm5.impl.d
+$ (cd _build/.sandbox/55817d33f9d0f0beceb5e6a01d02fa70/default && /Users/park/.opam/4.02.3/bin/ocamlc.opt -w -40 -w -49 -nopervasives -nostdlib -g -bin-annot -I lib/.rozettax.objs/byte -no-alias-deps -o lib/.rozettax.objs/byte/rozettax.cmo -c -impl lib/rozettax.ml-gen)
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamlc.opt -w -40 -g -bin-annot -I lib/.rozettax.objs/byte -no-alias-deps -open Rozettax -o lib/.rozettax.objs/byte/rozettax__Sm5.cmi -c -intf lib/sm5.mli)
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamlc.opt -w -40 -g -bin-annot -I lib/.rozettax.objs/byte -no-alias-deps -open Rozettax -o lib/.rozettax.objs/byte/rozettax__Sonata.cmi -c -intf lib/sonata.mli)
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamlc.opt -w -40 -g -bin-annot -I lib/.rozettax.objs/byte -no-alias-deps -open Rozettax -o lib/.rozettax.objs/byte/rozettax__Translator.cmo -c -impl lib/translator.ml)
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamlc.opt -w -40 -g -bin-annot -I lib/.rozettax.objs/byte -no-alias-deps -open Rozettax -o lib/.rozettax.objs/byte/rozettax__Parser.cmo -c -impl lib/parser.ml)
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamlc.opt -w -40 -g -bin-annot -I bin/.main.eobjs/byte -I lib/.rozettax.objs/byte -no-alias-deps -o bin/.main.eobjs/byte/dune__exe__Main.cmi -c -intf bin/main.mli)
+$ (cd _build/.sandbox/1670c22f0266d9a21457e69e284747f6/default && /Users/park/.opam/4.02.3/bin/ocamlopt.opt -w -40 -w -49 -nopervasives -nostdlib -g -I lib/.rozettax.objs/byte -I lib/.rozettax.objs/native -intf-suffix .ml-gen -no-alias-deps -o lib/.rozettax.objs/native/rozettax.cmx -c -impl lib/rozettax.ml-gen)
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamlopt.opt -w -40 -g -I lib/.rozettax.objs/byte -I lib/.rozettax.objs/native -intf-suffix .ml -no-alias-deps -open Rozettax -o lib/.rozettax.objs/native/rozettax__Sonata.cmx -c -impl lib/sonata.ml)
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamlopt.opt -w -40 -g -I lib/.rozettax.objs/byte -I lib/.rozettax.objs/native -intf-suffix .ml -no-alias-deps -open Rozettax -o lib/.rozettax.objs/native/rozettax__Sm5.cmx -c -impl lib/sm5.ml)
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamlopt.opt -w -40 -g -I lib/.rozettax.objs/byte -I lib/.rozettax.objs/native -intf-suffix .ml -no-alias-deps -open Rozettax -o lib/.rozettax.objs/native/rozettax__Translator.cmx -c -impl lib/translator.ml)
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamlopt.opt -w -40 -g -I lib/.rozettax.objs/byte -I lib/.rozettax.objs/native -intf-suffix .ml -no-alias-deps -open Rozettax -o lib/.rozettax.objs/native/rozettax__Parser.cmx -c -impl lib/parser.ml)
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamlopt.opt -w -40 -g -I bin/.main.eobjs/byte -I bin/.main.eobjs/native -I lib/.rozettax.objs/byte -I lib/.rozettax.objs/native -intf-suffix .ml -no-alias-deps -o bin/.main.eobjs/native/dune__exe__Main.cmx -c -impl bin/main.ml)
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamlopt.opt -w -40 -g -a -o lib/rozettax.cmxa lib/.rozettax.objs/native/rozettax.cmx lib/.rozettax.objs/native/rozettax__Sm5.cmx lib/.rozettax.objs/native/rozettax__Sonata.cmx lib/.rozettax.objs/native/rozettax__Translator.cmx lib/.rozettax.objs/native/rozettax__Parser.cmx)
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamlopt.opt -w -40 -g -o bin/main.exe /Users/park/.opam/4.02.3/lib/ocaml/str.cmxa -I /Users/park/.opam/4.02.3/lib/ocaml lib/rozettax.cmxa bin/.main.eobjs/native/dune__exe__Main.cmx)
+> ld: warning: pointer not aligned at _caml_startup__data_begin+0xDE4 from /private/var/folders/md/r97yzzq11wsg7jl877gh8w8c0000gn/T/build_51a4c4_dune/camlstartupe2dea2.o
+> ld: warning: pointer not aligned at _camlStd_exit__data_begin+0x14 from /Users/park/.opam/4.02.3/lib/ocaml/std_exit.o
+> ld: warning: pointer not aligned at _camlDune__exe__Main__data_begin+0x144 from /Users/park/Library/CloudStorage/OneDrive-개인/문서/수업/2024-1/프로그래밍언어/2024/HW8/rozettax/_build/default/bin/.main.eobjs/native/dune__exe__Main.o
+> ld: warning: pointer not aligned at _camlRozettax__Sm5__data_begin+0x101C from lib/rozettax.a[3](rozettax__Sm5.o)
+> ld: warning: pointer not aligned at _camlRozettax__Sonata__data_begin+0xED4 from lib/rozettax.a[4](rozettax__Sonata.o)
+> ld: warning: pointer not aligned at _camlRozettax__Translator__data_begin+0xFC from lib/rozettax.a[5](rozettax__Translator.o)
+> ld: warning: pointer not aligned at _camlRozettax__Parser__data_begin+0x424 from lib/rozettax.a[6](rozettax__Parser.o)
+> ld: warning: pointer not aligned at _camlStr__data_begin+0xAF4 from /Users/park/.opam/4.02.3/lib/ocaml/str.a[2](str.o)
+> ld: warning: pointer not aligned at _camlCamlinternalFormatBasics__data_begin+0x84 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[2](camlinternalFormatBasics.o)
+> ld: warning: pointer not aligned at _camlPervasives__data_begin+0x104C from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[3](pervasives.o)
+> ld: warning: pointer not aligned at _camlArray__data_begin+0x3FC from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[4](array.o)
+> ld: warning: pointer not aligned at _camlList__data_begin+0x834 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[5](list.o)
+> ld: warning: pointer not aligned at _camlChar__data_begin+0x144 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[6](char.o)
+> ld: warning: pointer not aligned at _camlBytes__data_begin+0x704 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[7](bytes.o)
+> ld: warning: pointer not aligned at _camlString__data_begin+0x3FC from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[8](string.o)
+> ld: warning: pointer not aligned at _camlSys__data_begin+0x214 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[9](sys.o)
+> ld: warning: pointer not aligned at _camlMarshal__data_begin+0x1FC from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[11](marshal.o)
+> ld: warning: pointer not aligned at _camlObj__data_begin+0x24C from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[12](obj.o)
+> ld: warning: pointer not aligned at _camlInt32__data_begin+0x1BC from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[13](int32.o)
+> ld: warning: pointer not aligned at _camlInt64__data_begin+0x1BC from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[14](int64.o)
+> ld: warning: pointer not aligned at _camlNativeint__data_begin+0x1B4 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[15](nativeint.o)
+> ld: warning: pointer not aligned at _camlMap__data_begin+0x41C from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[19](map.o)
+> ld: warning: pointer not aligned at _camlCamlinternalLazy__data_begin+0xE4 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[22](camlinternalLazy.o)
+> ld: warning: pointer not aligned at _camlBuffer__data_begin+0x46C from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[25](buffer.o)
+> ld: warning: pointer not aligned at _camlCamlinternalFormat__data_begin+0x3224 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[26](camlinternalFormat.o)
+> ld: warning: pointer not aligned at _camlPrintf__data_begin+0x1F4 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[27](printf.o)
+> ld: warning: pointer not aligned at _camlArg__data_begin+0xB14 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[28](arg.o)
+> ld: warning: pointer not aligned at _camlDigest__data_begin+0x1EC from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[31](digest.o)
+> ld: warning: pointer not aligned at _camlRandom__data_begin+0x6DC from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[32](random.o)
+> ld: warning: pointer not aligned at _camlFilename__data_begin+0x7CC from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[42](filename.o)
+# Promoting "_build/default/rozettax.install" to "rozettax.install"

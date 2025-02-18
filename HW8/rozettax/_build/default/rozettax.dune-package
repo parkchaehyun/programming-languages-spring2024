@@ -1,0 +1,4 @@
+(lang dune 3.15)
+(name rozettax)
+(sections (lib .) (bin ../../bin) (doc ../../doc/rozettax))
+(files (lib (META dune-package opam)) (bin (rozettax)) (doc (README.md)))

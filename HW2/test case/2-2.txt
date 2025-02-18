@@ -1,0 +1,83 @@
+[Header]
+
+[Test]
+(* test 0 *)
+checkMetro (STATION "c")
+
+[Value]
+false
+
+[Test]
+(* test 1 *)
+checkMetro (AREA ("e", STATION "e"))
+
+[Value]
+true
+
+[Test]
+(* test 2 *)
+checkMetro (AREA ("e", STATION "c"))
+
+[Value]
+false
+
+[Test]
+(* test 3 *)
+checkMetro (AREA ("a", CONNECT (AREA ("b", STATION "a"), AREA("c", STATION "c"))))
+
+[Value]
+true
+
+
+[Test]
+(* test 4 *)
+checkMetro (AREA ("a", CONNECT (AREA ("b", STATION "a"), AREA("c", STATION "b"))))
+
+[Value]
+false
+
+[Test]
+(* test 5 *)
+checkMetro (AREA ("a", CONNECT (AREA ("b", STATION "a"), AREA("c", STATION "a"))))
+
+[Value]
+true
+
+[Test]
+(* test 6 *)
+checkMetro (CONNECT (AREA ("a", STATION "a"), AREA ("b", STATION "b")))
+
+[Value]
+true
+
+[Test]
+(* test 7 *)
+checkMetro (AREA ("a", AREA ("b", CONNECT (STATION "b", STATION "a"))))
+
+[Value]
+true
+
+[Test]
+(* test 8 *)
+checkMetro (CONNECT (AREA ("b", 
+                           CONNECT (STATION "b", 
+		                    AREA ("d", STATION "b"))), 
+                     AREA ("e", STATION "e")))
+
+[Value]
+true
+
+[Test]
+(* test 9 *)
+checkMetro
+  (AREA
+     ( "f",
+       CONNECT
+         ( AREA
+             ("x", CONNECT (STATION "f", CONNECT (STATION "x", STATION "x"))),
+           AREA
+             ("x", CONNECT (STATION "f", CONNECT (STATION "x", STATION "x")))
+         ) ))
+
+[Value]
+true

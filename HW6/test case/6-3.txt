@@ -1,0 +1,225 @@
+[Header]
+
+open Lambda
+open Evaluator
+
+type nexp = NVar of int
+          | NLam of int * nexp
+          | NApp of nexp * nexp
+
+
+let normalize e =
+    let count = ref 0 in
+    let newN () = count := !count + 1; !count in
+
+    let rec iter e env =
+        match e with
+        | Lexp.Var str ->
+            let n = try List.assoc str env with Not_found -> newN () in
+            (NVar n)
+
+        | Lam (x, e') ->
+            let n = newN() in
+            let ne = iter e' ((x, n)::env) in
+            NLam(n, ne)
+
+        | App (e1, e2) ->
+            NApp(iter e1 env, iter e2 env)
+    in
+    iter e []
+
+let rec inline (lexp_let : Lexp.t_let) : Lexp.t =
+	match lexp_let with
+	| LVar s -> Var s
+	| LLam (s, e) -> Lam (s, inline e)
+	| LApp (e1, e2) -> App(inline e1, inline e2)
+	| Let (s, e1, e2) -> Evaluator.subs (s, inline e1) (inline e2)
+
+let equal p1 p2 =
+    (normalize p1) = (normalize p2)
+
+let makePgm str = 
+    let lexbuf = Lexing.from_string str in
+    Parser.program Lexer.start lexbuf
+
+
+let test inputStr expectStr =
+    let pgm = inline(makePgm inputStr) in
+    let expectPGM = inline(makePgm expectStr) in
+    equal (Evaluator.reduce pgm) expectPGM
+
+[Test]
+(* Basic let-binding 1 *)
+test "let z' = z in z'" "z"
+
+[Value]
+true
+
+
+[Test]
+(* Basic let-binding 2 *)
+test "let a = b in let b = c in a" "b"
+
+[Value]
+true
+
+
+[Test]
+(* Normal form 1 *)
+test "\\x.\\y.\\z.((((x y)(y z))(\\x.x))(\\x.x))(\\x.x)" "\\x.\\y.\\z.((((x y)(y z))(\\x.x))(\\x.x))(\\x.x)"
+
+[Value]
+true
+
+
+[Test]
+(* Normal form 2 *)
+test "(\\x.(\\y.(x y)))" "(\\x.(\\y.(x y)))"
+
+[Value]
+true
+
+
+[Test]
+(* Normal form 3 *)
+test "\\x.\\y.\\z.x \\q.\\w.\\r. t" "\\x.\\y.\\z.x \\q.\\w.\\r. t"
+
+[Value]
+true
+
+
+[Test]
+(* Simple reduction 1 *)
+test "(\\x.(\\x.x))y" "\\x.x"
+
+[Value]
+true
+
+
+[Test]
+(* Simple reduction 2 *)
+test "(\\a.\\b.b) ((\\x.x x) (\\x.x x))" "\\x.x"
+
+[Value]
+true
+
+
+[Test]
+(* pair manipulation *)
+test "let t = \\l.\\r.l in let p = \\f'.\\s'.\\b.bf's' in let f'' = \\p.pt in f''(pab)" "a"
+
+[Value]
+true
+
+
+[Test]
+(* integer encoding 1 *)
+test "let o = \\s.\\z.z in let c = \\n.\\s.\\z.s(nsz) in co" "\\s.\\z.sz"
+
+[Value]
+true
+
+
+[Test]
+(* integer encoding 2 *)
+test "let o = \\s.\\z.z in let c = \\n.\\s.\\z.s(nsz) in c(co)" "\\s.\\z.s(sz)"
+
+[Value]
+true
+
+
+[Test]
+(* integer encoding 3 *)
+test "let o = \\s.\\z.z in let c = \\n.\\s.\\z.s(nsz) in c(c(co))" "\\s.\\z.s(s(sz))"
+
+[Value]
+true
+
+
+[Test]
+(* integer addition 0+0 *)
+test "let o = \\s.\\z.z in let p = \\m.\\n.\\s.\\z.ms(nsz) in poo" "\\s.\\z.z"
+
+[Value]
+true
+
+
+[Test]
+(* integer addition 0+1 *)
+test "let o = \\s.\\z.z in let c = \\n.\\s.\\z.s(nsz) in let p = \\m.\\n.\\s.\\z.ms(nsz) in let o' = co in poo'" "\\s.\\z.sz"
+
+[Value]
+true
+
+
+[Test]
+(* integer addition 2+3 *)
+test "let o = \\s.\\z.z in let c = \\n.\\s.\\z.s(nsz) in let p = \\m.\\n.\\s.\\z.ms(nsz) in let o'' = c(co) in let o''' = c(c(co)) in po'''o''" "\\s.\\z.s(s(s(s(sz))))"
+
+[Value]
+true
+
+
+[Test]
+(* integer multiplication 0*1 *)
+test "let o = \\s.\\z.z in let c = \\n.\\s.\\z.s(nsz) in let p = \\m.\\n.\\s.\\z.ms(nsz) in let t = \\m.\\n.m(pn)o in let o' = co in too'" "\\s.\\z.z"
+
+[Value]
+true
+
+
+[Test]
+(* integer multiplication 2*3 *)
+test "let o = \\s.\\z.z in let c = \\n.\\s.\\z.s(nsz) in let p = \\m.\\n.\\s.\\z.ms(nsz) in let t = \\m.\\n.m(pn)o in let o'' = c(co) in let o''' = c(c(co)) in to''o'''" "\\s.\\z.(s(s(s(s(s(sz))))))"
+
+[Value]
+true
+
+
+[Test]
+(* conditional left *)
+test "let y = \\t.\\f.t in let n = \\t.\\f.f in let c = \\l.\\m.\\n.lmn in cyab" "a"
+
+[Value]
+true
+
+
+[Test]
+(* conditional right *)
+test "let y = \\t.\\f.t in let n = \\t.\\f.f in let c = \\l.\\m.\\n.lmn in cnab" "b"
+
+[Value]
+true
+
+
+[Test]
+(* and 1 *)
+test "let y = \\t.\\f.t in let n = \\t.\\f.f in let a = \\b.\\c.bcn in ayy" "\\t.\\f.t"
+
+[Value]
+true
+
+
+[Test]
+(* and 2 *)
+test "let y = \\t.\\f.t in let n = \\t.\\f.f in let a = \\b.\\c.bcn in any" "\\t.\\f.f"
+
+[Value]
+true
+
+
+[Test]
+(* and 3 *)
+test "let y = \\t.\\f.t in let n = \\t.\\f.f in let a = \\b.\\c.bcn in ann" "\\t.\\f.f"
+
+[Value]
+true
+
+
+[Test]
+(* recursive sum *)
+test "let o = \\s.\\z.z in let o' = \\s.\\z.sz in let o'' = \\s.\\z.s(sz) in let y = \\t.\\f.t in let n = \\t.\\f.f in let c = \\l.\\m.\\n.lmn in let p = \\f.\\s.\\b.bfs in let f = \\p.py in let s = \\p.pn in
+let a = \\m.\\n.\\s.\\z.ms(nsz) in let z = \\m.m(\\x.n)y in let z' = poo in let s' = \\x.p(sx)(ao'(sx)) in let d = \\m.f(ms'z') in let g = \\f.\\n.c(zn)o(an(f(dn))) in let f' = \\f.(\\x.f(\\y.xxy))(\\x.f(\\y.xxy)) in let u = f'g in uo''" "\\s.\\z.s(s(sz))"
+
+[Value]
+true

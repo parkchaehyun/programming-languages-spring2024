@@ -1,0 +1,72 @@
+# dune build --release
+# OCAMLPARAM: unset
+# Shared cache: disabled
+# Shared cache location: /Users/park/.cache/dune/db
+# Workspace root:
+# "/Users/park/Library/CloudStorage/OneDrive-\225\132\128\225\133\162\225\132\139\225\133\181\225\134\171/\225\132\134\225\133\174\225\134\171\225\132\137\225\133\165/\225\132\137\225\133\174\225\132\139\225\133\165\225\134\184/2024-1/\225\132\145\225\133\179\225\132\133\225\133\169\225\132\128\225\133\179\225\132\133\225\133\162\225\132\134\225\133\181\225\134\188\225\132\139\225\133\165\225\134\171\225\132\139\225\133\165/2024/HW6/sm5"
+# Auto-detected concurrency: 8
+# Dune context:
+#  { name = "default"
+#  ; kind = "default"
+#  ; profile = Release
+#  ; merlin = true
+#  ; fdo_target_exe = None
+#  ; build_dir = In_build_dir "default"
+#  ; instrument_with = []
+#  }
+$ /Users/park/.opam/4.02.3/bin/ocamlc.opt -config > /var/folders/md/r97yzzq11wsg7jl877gh8w8c0000gn/T/dune_b1ec7b_output
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamldep.opt -modules -impl lib/translator.ml) > _build/default/lib/.sm5.objs/sm5__Translator.impl.d
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamlc.opt -w -40 -g -bin-annot -I lib/.sm5.objs/byte -no-alias-deps -open Sm5 -o lib/.sm5.objs/byte/sm5__Translator.cmo -c -impl lib/translator.ml)
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamlopt.opt -w -40 -g -I lib/.sm5.objs/byte -I lib/.sm5.objs/native -intf-suffix .ml -no-alias-deps -open Sm5 -o lib/.sm5.objs/native/sm5__Translator.cmx -c -impl lib/translator.ml)
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamlopt.opt -w -40 -g -a -o lib/sm5.cmxa lib/.sm5.objs/native/sm5.cmx lib/.sm5.objs/native/sm5__K.cmx lib/.sm5.objs/native/sm5__Machine.cmx lib/.sm5.objs/native/sm5__Translator.cmx lib/.sm5.objs/native/sm5__Pp.cmx lib/.sm5.objs/native/sm5__Parser.cmx lib/.sm5.objs/native/sm5__Lexer.cmx)
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamlopt.opt -w -40 -g -I bin/.main.eobjs/byte -I bin/.main.eobjs/native -I lib/.sm5.objs/byte -I lib/.sm5.objs/native -intf-suffix .ml -no-alias-deps -open Dune__exe -o bin/.main.eobjs/native/dune__exe__Main.cmx -c -impl bin/main.ml)
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamlopt.opt -w -40 -g -I bin/.main.eobjs/byte -I bin/.main.eobjs/native -I lib/.sm5.objs/byte -I lib/.sm5.objs/native -intf-suffix .ml -no-alias-deps -open Dune__exe -o bin/.main.eobjs/native/dune__exe__Gc_test.cmx -c -impl bin/gc_test.ml)
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamlopt.opt -w -40 -g -o bin/gc_test.exe lib/sm5.cmxa bin/.main.eobjs/native/dune__exe.cmx bin/.main.eobjs/native/dune__exe__Gc_test.cmx)
+> ld: warning: pointer not aligned at _caml_startup__data_begin+0x83C from /private/var/folders/md/r97yzzq11wsg7jl877gh8w8c0000gn/T/build_b62f21_dune/camlstartup204432.o
+> ld: warning: pointer not aligned at _camlStd_exit__data_begin+0x14 from /Users/park/.opam/4.02.3/lib/ocaml/std_exit.o
+> ld: warning: pointer not aligned at _camlDune__exe__Gc_test__data_begin+0xFEC from /Users/park/Library/CloudStorage/OneDrive-개인/문서/수업/2024-1/프로그래밍언어/2024/HW6/sm5/_build/default/bin/.main.eobjs/native/dune__exe__Gc_test.o
+> ld: warning: pointer not aligned at _camlSm5__Machine__data_begin+0x10A4 from lib/sm5.a[4](sm5__Machine.o)
+> ld: warning: pointer not aligned at _camlCamlinternalFormatBasics__data_begin+0x84 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[2](camlinternalFormatBasics.o)
+> ld: warning: pointer not aligned at _camlPervasives__data_begin+0x104C from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[3](pervasives.o)
+> ld: warning: pointer not aligned at _camlList__data_begin+0x834 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[5](list.o)
+> ld: warning: pointer not aligned at _camlChar__data_begin+0x144 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[6](char.o)
+> ld: warning: pointer not aligned at _camlBytes__data_begin+0x704 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[7](bytes.o)
+> ld: warning: pointer not aligned at _camlString__data_begin+0x3FC from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[8](string.o)
+> ld: warning: pointer not aligned at _camlSys__data_begin+0x214 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[9](sys.o)
+> ld: warning: pointer not aligned at _camlBuffer__data_begin+0x46C from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[25](buffer.o)
+> ld: warning: pointer not aligned at _camlCamlinternalFormat__data_begin+0x3224 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[26](camlinternalFormat.o)
+> ld: warning: pointer not aligned at _camlPrintf__data_begin+0x1F4 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[27](printf.o)
+$ (cd _build/default && /Users/park/.opam/4.02.3/bin/ocamlopt.opt -w -40 -g -o bin/main.exe lib/sm5.cmxa bin/.main.eobjs/native/dune__exe.cmx bin/.main.eobjs/native/dune__exe__Main.cmx)
+> ld: warning: pointer not aligned at _caml_startup__data_begin+0xF5C from /private/var/folders/md/r97yzzq11wsg7jl877gh8w8c0000gn/T/build_b62f21_dune/camlstartup75eccd.o
+> ld: warning: pointer not aligned at _camlStd_exit__data_begin+0x14 from /Users/park/.opam/4.02.3/lib/ocaml/std_exit.o
+> ld: warning: pointer not aligned at _camlDune__exe__Main__data_begin+0x194 from /Users/park/Library/CloudStorage/OneDrive-개인/문서/수업/2024-1/프로그래밍언어/2024/HW6/sm5/_build/default/bin/.main.eobjs/native/dune__exe__Main.o
+> ld: warning: pointer not aligned at _camlSm5__K__data_begin+0x45C from lib/sm5.a[3](sm5__K.o)
+> ld: warning: pointer not aligned at _camlSm5__Machine__data_begin+0x10A4 from lib/sm5.a[4](sm5__Machine.o)
+> ld: warning: pointer not aligned at _camlSm5__Translator__data_begin+0x5DC from lib/sm5.a[5](sm5__Translator.o)
+> ld: warning: pointer not aligned at _camlSm5__Pp__data_begin+0x2D4 from lib/sm5.a[6](sm5__Pp.o)
+> ld: warning: pointer not aligned at _camlSm5__Parser__data_begin+0x1614 from lib/sm5.a[7](sm5__Parser.o)
+> ld: warning: pointer not aligned at _camlSm5__Lexer__data_begin+0xEBC from lib/sm5.a[8](sm5__Lexer.o)
+> ld: warning: pointer not aligned at _camlCamlinternalFormatBasics__data_begin+0x84 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[2](camlinternalFormatBasics.o)
+> ld: warning: pointer not aligned at _camlPervasives__data_begin+0x104C from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[3](pervasives.o)
+> ld: warning: pointer not aligned at _camlArray__data_begin+0x3FC from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[4](array.o)
+> ld: warning: pointer not aligned at _camlList__data_begin+0x834 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[5](list.o)
+> ld: warning: pointer not aligned at _camlChar__data_begin+0x144 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[6](char.o)
+> ld: warning: pointer not aligned at _camlBytes__data_begin+0x704 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[7](bytes.o)
+> ld: warning: pointer not aligned at _camlString__data_begin+0x3FC from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[8](string.o)
+> ld: warning: pointer not aligned at _camlSys__data_begin+0x214 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[9](sys.o)
+> ld: warning: pointer not aligned at _camlMarshal__data_begin+0x1FC from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[11](marshal.o)
+> ld: warning: pointer not aligned at _camlObj__data_begin+0x24C from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[12](obj.o)
+> ld: warning: pointer not aligned at _camlInt32__data_begin+0x1BC from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[13](int32.o)
+> ld: warning: pointer not aligned at _camlInt64__data_begin+0x1BC from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[14](int64.o)
+> ld: warning: pointer not aligned at _camlNativeint__data_begin+0x1B4 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[15](nativeint.o)
+> ld: warning: pointer not aligned at _camlLexing__data_begin+0x374 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[16](lexing.o)
+> ld: warning: pointer not aligned at _camlParsing__data_begin+0x344 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[17](parsing.o)
+> ld: warning: pointer not aligned at _camlCamlinternalLazy__data_begin+0xE4 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[22](camlinternalLazy.o)
+> ld: warning: pointer not aligned at _camlBuffer__data_begin+0x46C from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[25](buffer.o)
+> ld: warning: pointer not aligned at _camlCamlinternalFormat__data_begin+0x3224 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[26](camlinternalFormat.o)
+> ld: warning: pointer not aligned at _camlPrintf__data_begin+0x1F4 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[27](printf.o)
+> ld: warning: pointer not aligned at _camlArg__data_begin+0xB14 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[28](arg.o)
+> ld: warning: pointer not aligned at _camlDigest__data_begin+0x1EC from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[31](digest.o)
+> ld: warning: pointer not aligned at _camlRandom__data_begin+0x6DC from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[32](random.o)
+> ld: warning: pointer not aligned at _camlHashtbl__data_begin+0x4A4 from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[33](hashtbl.o)
+> ld: warning: pointer not aligned at _camlFilename__data_begin+0x7CC from /Users/park/.opam/4.02.3/lib/ocaml/stdlib.a[42](filename.o)

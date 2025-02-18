@@ -1,0 +1,20 @@
+(lang dune 3.15)
+(using menhir 2.1)
+
+(name lambda)
+
+(generate_opam_files true)
+
+(authors
+  "이재호 <jhlee@ropas.snu.ac.kr>"
+  "박규연 <kypark@ropas.snu.ac.kr>")
+
+(maintainers "이재호 <jhlee@ropas.snu.ac.kr>")
+
+(package
+ (name lambda)
+ (synopsis "Lambda Ground")
+ (description "Lambda calculus normal-order reduction")
+ (depends ocaml dune))
+
+; See the complete stanza docs at https://dune.readthedocs.io/en/stable/dune-files.html#dune-project

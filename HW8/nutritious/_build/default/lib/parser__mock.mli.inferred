@@ -1,0 +1,44 @@
+type token =
+    WRITE
+  | VAL
+  | TRUE
+  | THEN
+  | STRING of bytes
+  | SEMICOLON
+  | RP
+  | REC
+  | READ
+  | RARROW
+  | PLUS
+  | OR
+  | NUM of int
+  | MINUS
+  | MALLOC
+  | LP
+  | LET
+  | IN
+  | IF
+  | ID of bytes
+  | FN
+  | FALSE
+  | EQUAL
+  | EOF
+  | END
+  | ELSE
+  | DOT
+  | COMMA
+  | COLONEQ
+  | BANG
+  | AND
+exception EmptyBinding
+val desugarLet :
+  Nutritious__M.M.decl list * Nutritious__M.M.exp -> Nutritious__M.M.exp
+exception IncorrectSelection
+val whichSel : Nutritious__M.M.exp * int -> Nutritious__M.M.exp
+val menhir_begin_marker : int
+val xv_program : Nutritious__M.M.exp
+val xv_expr : Nutritious__M.M.exp
+val xv_decls : Nutritious__M.M.decl list
+val xv_decl : Nutritious__M.M.decl
+val xv_aexpr : Nutritious__M.M.exp
+val menhir_end_marker : int

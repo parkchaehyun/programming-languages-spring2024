@@ -1,0 +1,370 @@
+[Header]
+open Nutritious
+open M
+
+let (|>) g f = f g
+
+let test str =
+    let lexbuf = Lexing.from_string str in
+    let pgm = Parser.program Lexer.start lexbuf in    
+    Poly_checker.check pgm
+
+[Test]
+(* Test 1 : Heavy test on function application *)
+test 
+"
+let val I = fn x => x
+    val K = fn x => fn y => x
+    val S = fn x => fn y => fn z => (x z) (y z)
+in
+  (S (S (K S) (S (K K) I)) (S (S (K S) (S (K K) I)) (K I)))
+  (fn x => x + 1)
+  7
+end
+"
+
+[Value]
+M.TyInt
+
+
+[Test]
+test
+(* Test 2 : Heavy test on function application (type error) *)
+"
+let val I = fn x => x
+    val K = fn x => fn y => x
+    val S = fn x => fn y => fn z => (x z) (y z)
+in
+  (S (S (K S) (S (K K) I)) (I (S (K S) (S (K K) I)) (K I)))
+  (fn x => x + 1)
+  7
+end
+"
+
+[Exception]
+M.TypeError _
+
+
+[Test]
+(* Test 3 : Polymorphism with pair & imperatives *)
+test 
+"
+let val I = fn x => x 
+    val sub = fn x => x.1 - x.1 
+    val const = fn n => 10 
+in 
+  I I; 
+  sub(1, true) + sub(2, \"snu 4190.310 spring 2023\"); 
+  const true + const \"kwangkeun yi\" + const 10
+end
+"
+
+[Value]
+M.TyInt
+
+[Test]
+(* Test 4 : Polymorphism with pair & imperatives (type error) *)
+test 
+"
+let val I = fn x => x 
+    val sub = fn x => x.1 - x.1 
+    val const = fn n => 10 
+in 
+  I I; 
+  sub(1, true) + sub(\"snu 4190.310 spring 2023\", 2); 
+  const true + const \"kwangkeun yi\" + const 10
+end
+"
+
+[Exception]
+M.TypeError _
+
+[Test]
+(* Test 5 : Polymorphism with multiple WRITE *)
+test 
+"write(false);write(101);write(\"c++\")"
+
+[Value]
+M.TyString
+
+[Test]
+(* Test 6 : Polymorphism with nested Malloc *)
+test
+"
+let val f1 = fn x => x 
+    val f2 = fn y => f1 true 
+    val f3 = malloc (f1 false, malloc (f2 1)) 
+in 
+  f3
+end
+"
+[Value]
+M.TyLoc (M.TyPair(M.TyBool, M.TyLoc( M.TyBool)))
+
+
+[Test]
+(* Test 7 : Simple type toy : nested if *)
+test
+"
+if true then (if false then malloc(if 0=1 then 2 else 3) else malloc(20)) else malloc(true;30)
+"
+
+[Value]
+M.TyLoc (M.TyInt)
+
+[Test]
+(* Test 8 : Polymorphic type toy : fold list with 3 elems *)
+test
+"
+let val list = fn x => fn y => fn z => fn w =>((x, y), (z, w))
+    val fst = fn x => x.1.1
+    val snd = fn x => x.1.2
+    val thd = fn x => x.2.1
+    val fth = fn x => x.2.2
+    rec fold4 = fn f => fn lst => fn init_v =>
+      let val v1 = f (fst lst) init_v
+          val v2 = f (snd lst) v1
+          val v3 = f (thd lst) v2 
+          val v4 = f (fth lst) v3 
+      in
+        v4
+      end
+in
+  (
+    fold4 (fn v => fn acc_v => v + acc_v) (list 1 2 3 4) 10,
+    fold4 
+      (fn l => fn acc_p => (l := \"done\"; if !l = \"abc\" then (acc_p.1 + 1, true) else acc_p)) 
+      (list (malloc \"aaa\") (malloc \"abc\") (malloc \"def\") (malloc \"true\")) 
+      (0, false)
+  )
+end
+"
+
+[Value]
+M.TyPair (M.TyInt, M.TyPair(M.TyInt, M.TyBool))
+
+[Test]
+(* Test 9 : deref. after Malloc *)
+test
+" !malloc (10+10)
+"
+
+[Value]
+M.TyInt
+
+
+[Test]
+(* Test 10 : Malloc with function  *)
+test
+"
+let val p1 = (fn x => x)
+    val p2 = (fn x => (x and x))
+    val f1 = (malloc p1) in
+    f1 := p2 ;
+    (!f1) true
+end
+"
+[Value]
+M.TyBool
+
+[Test]
+(* Test 11 : Malloc with function (type error)  *)
+test
+"
+let val p1 = (fn x => x = x)
+    val p2 = (fn x => (x and x))
+    val f1 = malloc p1 in
+  f1 := p2 ;
+  (!f1) 2
+end
+"
+
+[Exception]
+M.TypeError _
+
+[Test]
+(* Test 12 : Recursion Test *)
+test
+"
+let val g = fn x => ((0 - 1) + x)
+    rec f = fn x => (if (x = x) then (g x) else (f (g x))) 
+in 
+  (f 6)
+end
+"
+[Value]
+M.TyInt
+
+[Test]
+(* Test 13 : Recursion Test fail *)
+
+test
+"
+let val g = fn x => x = false
+    rec f = fn x => (if (x = x) then (g x) else (f (x - 1))) 
+in 
+  (f 6)
+end
+"
+
+[Exception]
+M.TypeError _
+
+
+[Test]
+(* Test 14 : Polymorphism with WRITE & EQ 1 *)
+test
+"
+let val compare = fn p =>
+  if p.1 = p.2 then 
+    (write (p.1 = p.2))
+  else 
+    (write (false))
+in
+  let val i = 0 - 1
+      val s = \"hi word\" 
+      val b = true
+  in
+   compare (i, 1);
+   compare (b, false);
+   compare (s, \"hello world\")
+  end
+end
+"
+
+[Value]
+M.TyBool
+
+
+[Test]
+(* Test 15 : Polymorphism with WRITE & EQ 2 *)
+test
+"
+let val f = fn p => 
+  (* p : ((writable a) loc, writable a -> writable b) *)
+  (
+    write !(p.1);
+    (
+      if (p.2 (p.1)) = (p.2 (p.1)) then
+        (write (p.2 (p.1)); 1)
+      else
+        (write ((p.1) = (p.1)); 2),
+      (p.2 (p.1))
+    )
+  )
+in
+  (
+    (f (malloc true, fn i => (write !i; true))).2,
+    (f (malloc 3, fn i => (write !i; \"test\"))).1
+  )
+end
+"
+
+[Value]
+M.TyPair (M.TyBool, M.TyInt)
+
+[Test]
+(* Test 16 : Polymorphism with WRITE & EQ 2 (Type error) *)
+test
+"
+let val f = fn p => 
+  (* p : ((writable a) loc, writable a -> writable b) *)
+  (
+    write !(p.1);
+    (
+      if (p.2 (p.1)) = (p.2 (p.1)) then
+        (write (p.2 (p.1)); 1)
+      else
+        (write ((p.1) = (p.1)); 2),
+      (p.2 (p.1))
+    )
+  )
+in
+  (
+    (f (malloc true, fn i => (write !i; malloc true))).2,
+    (f (malloc 3, fn i => (write !i; \"test\"))).1
+  )
+end
+"
+
+[Exception]
+M.TypeError _
+
+[Test]
+(* Test 17 : Non-terminating program must pass type checking too *)
+test
+"
+let val id = fn x => x 
+    rec f = fn x =>
+      write \"Entering loop\";
+      write !x;
+      x := id (!x);
+      f x
+in
+  if (id true) then
+    1 + (f (malloc 10))
+  else
+    !(f (malloc true))
+end
+"
+
+[Value]
+M.TyInt
+
+[Test]
+(* Test 18 : Polymorphic trap 1 
+  malloc expression must be checked before generalization
+*)
+test
+"
+let val f = 
+  let val id = fn x => x
+      rec foo = fn x => malloc (id x) 
+  in
+    foo
+  end
+in
+  (
+    write ((!(f (fn x => (write x; x)))) true),
+    ((!(f (fn x => (x = x, x)))) \"PL\")
+  )
+end
+"
+
+[Value]
+M.TyPair (M.TyBool, M.TyPair (M.TyBool, M.TyString))
+
+
+[Test]
+(* Test 19 : Polymorphic trap 1 (type error)
+  malloc expression must be checked before generalization
+*)
+test
+"
+let val xmalloc = fn x => malloc x
+    val f = if 1 = 1 then xmalloc (fn x => (write \"true\"; x)) else xmalloc xmalloc (fn x => malloc x := x)
+in
+  f := (fn x => x or false); malloc 0 := ((!f 10)); (!f) true
+end
+"
+
+[Exception]
+M.TypeError _
+
+[Test]
+(* Test 20 : Polymorphic trap 2
+  Type generalization must exclude type variables in current type 
+  environment. 
+*)
+test
+"
+let val x = malloc (fn x => (write (x = x); (malloc x, x)))
+    val y = x in (* This y should not be generalized, since x is in type env *)
+  y := (fn x => (write x; (true, x)));
+  !y (malloc 10)
+end
+"
+
+[Exception]
+M.TypeError _
+

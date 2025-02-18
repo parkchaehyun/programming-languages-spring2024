@@ -1,0 +1,79 @@
+let proc leaf (n) =
+  n
+in
+let proc makeLtree (n, t) =
+  {p := n, l := t, r := unit}
+in
+let proc makeRtree (n, t) =
+  {p := n, l := unit, r := t}
+in
+let proc makeTree (n, t1, t2) =
+  {p := n, l := t1, r := t2}
+in
+let proc isEmpty (t) =
+  if (t = unit) then true
+  else false
+in
+let proc rTree (t) =
+  t.r
+in
+let proc lTree (t) =
+  t.l
+in
+let proc nodeVal (t) =
+  t.p
+in
+let proc dft (t) =
+  if (isEmpty (t)) then
+    unit
+  else (
+    write (nodeVal (t));
+    dft (t.l);
+    dft (t.r)
+  )
+in
+let proc makeQueue (n) =
+  { head := unit, tail := unit }
+in
+let proc makeNode (n) = 
+  { val := n, next := unit }
+in
+let proc enqueue (q, n) =
+  let new := makeNode (n) in
+  if (q.head = unit) then (
+    q.head := new;
+    q.tail := new
+  )
+  else (
+    q.tail.next := new;
+    q.tail :=  new
+  )
+in
+let proc dequeue (q) =
+  let val := q.head.val in
+  q.head := q.head.next;
+  if (q.head = unit) then
+    q.tail := unit
+  else () ;
+  val
+in
+let proc bft (t) =
+  if (isEmpty (t)) then
+    ()
+  else (
+    let q := makeQueue (0) in
+    enqueue<q, t>;
+    while (true) do (
+      let cur := dequeue <q> in
+      write (nodeVal (cur));
+      if (not (isEmpty (cur.l))) then
+        enqueue <q, cur.l>
+      else () ;
+
+      if (not (isEmpty (cur.r))) then
+        enqueue <q, cur.r>
+      else ()
+    )
+  )
+in
+2019

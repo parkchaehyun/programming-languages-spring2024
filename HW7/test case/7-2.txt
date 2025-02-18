@@ -1,0 +1,146 @@
+[Header]
+open Sys
+open Exn
+open Cps
+open Xexp
+
+exception Invalid_CPS
+
+
+let test mexp_str = 
+  let input_mexp = Parser.program Lexer.start (Lexing.from_string mexp_str) in
+  let cps_mexp = Cps.xcps input_mexp in
+  
+  (* let _ = if not (is_cps cps_mexp) then raise Invalid_CPS in *)
+  
+  let id = Fn ("x", Var "x") in
+  match (Xexp.run (Xexp.App (cps_mexp, Xexp.Pair (Xexp.Fn ("v", Xexp.Var "v"), Xexp.Fn ("v", Xexp.Num 2024)))), Xexp.run input_mexp) with
+  | N n1, N n2 -> n1 = n2
+  | _ -> false
+
+
+[Test]
+(* 1. Simple Raise/Handle *)
+
+test
+"
+  ((raise 4) handle a a)
+"
+
+[Value]
+true
+
+[Test]
+(* 2. Simple Raise/Handle with Pair *)
+
+test
+"
+  ((1 + 2, (raise (3 , 4) ) ) handle a (a)).1 handle b (b + 10)
+"
+
+[Value]
+true
+
+[Test]
+(* 3. Recursion and high order function *)
+
+test
+"
+  (fn f => f (f 4))
+  (rec asum x => 
+    (ifp x then (asum (x  + (-2) ) + x)
+    else (ifp ( x + 1 ) then ( raise asum ( x + 5 ) ) else 0)
+    ) handle a ( a + asum ( x + 3 ) )
+  )
+"
+
+
+[Value]
+true
+
+[Test]
+(* 4. If exception raises, program must abort/jump out *)
+
+test
+"
+  (ifp (raise 5) + (raise 5) + (fn x => x) then y else z) handle a a
+"
+
+[Value]
+true
+
+[Test]
+(* 5. Exception handler can raise exceptions *)
+
+test
+"
+  (
+    (rec k f => 
+      (fn x => (
+        (f x) handle a (
+            ((k (fn y => ( (f y) handle b (a + b)) )) (a + (-3)))
+            handle c (raise ( x + c )) 
+          )
+        )
+      )
+    )
+    (fn x => (ifp x then (raise ( x + (-1) ) ) else 0) ) 11
+  ) handle a ( a handle a a ) 
+"
+
+[Value]
+true
+
+[Test]
+(* 6. Uncaught exception *)
+
+test
+"
+  (rec fs f => (ifp  ( ( (fn x => (raise f) ) ) 0 ) then (f 1) else (f 2) ) )
+  (fn x =>ifp x then ( (raise x) handle x ( ( x, (raise x)).1 ) ) else raise x)
+"
+
+[Value]
+true
+
+[Test]
+(* 7. Preservation of environment *)
+
+test
+"
+  (fn x =>
+    (fn y =>
+      (fn x =>
+        (ifp y then
+        (fn x => raise (x + y)) 55
+        else
+        45
+        ) handle z (x + y + z)
+      ) 35
+    ) 25
+  ) 15
+"
+
+[Value]
+true
+
+[Test]
+(* 8.  Toy function with raise *)
+
+test
+"
+  (
+    ( rec rsum x =>
+      (rec lsum y => 
+        ifp (x.2) + (y.1) 
+        then ( (x.2) + (rsum (x.1 , (x.2) + (-1) ) y )
+          + (ifp (y.1) then ( lsum ((y.1) + (-1) , y.2 ) ) else ( raise (x.2) + (y.1) )  ) )
+        else ( ifp (y.1) + (y.2) then raise (x.1) + (y.2) else 252 )
+      )
+    )
+    ((1) , (-2)) ((4) , (-8))
+  ) handle a a
+"
+
+[Value]
+true

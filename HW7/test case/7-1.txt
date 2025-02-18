@@ -1,0 +1,233 @@
+[Header]
+open Cps_translate
+open M0
+
+exception Invalid_CPS
+
+let id = Fn ("x", Var "x")
+
+let test mexp_str =
+  let input_mexp = Parser.program Lexer.start (Lexing.from_string mexp_str) in
+  let cps_mexp = Cps.cps input_mexp in
+
+  match (run (App (cps_mexp, id)), run input_mexp) with
+  | N n1, N n2 -> n1 = n2
+  | _ -> false
+
+let callcc =
+  let f = "call/cc#f"
+  and cc = "call/cc#cc"
+  and x = "call/cc#x"
+  and k = "call/cc#k" in
+  let call_cc =
+    Fn (cc, App (App (Var f, Fn (x, Fn (k, App (Var cc, Var x)))), Var cc))
+  in
+  C (Fun (f, call_cc), emptyEnv)
+
+let cc_env = function "callcc" -> callcc | x -> emptyEnv x
+let run' exp = eval cc_env exp
+
+let test_callcc mexp_str v =
+  let input_mexp = Parser.program Lexer.start (Lexing.from_string mexp_str) in
+  let cps_mexp = Cps.cps input_mexp in
+
+  match (run' (App (cps_mexp, id)), v) with
+  | N n1, n2 -> n1 = n2
+  | _ -> false
+
+
+
+[Test]
+(* 1. Pair Select  *)
+test "(2,5).1"
+
+[Value]
+true
+
+[Test]
+(* 2. ifp *)
+test "ifp 0 then 1 else 2"
+
+[Value]
+true
+
+[Test]
+(* 3. app *)
+test "(fn x => (x + 4)) -1"
+
+[Value]
+true
+
+[Test]
+(* 4. multiple app *)
+test "(fn z => (fn y => (fn x => x + y + z))) 4 2 1"
+
+[Value]
+true
+
+[Test]
+(* 5. complex pair, sel *)
+test "((1, (2, (3,4))).2.2.1, ((4,5).1 ,6).2).1"
+
+[Value]
+true
+
+[Test]
+(* 6. Recursion *)
+test "(rec f x => ifp x then x + f (x + (-2)) else 0) 11"
+
+[Value]
+true
+
+[Test]
+(* 7. high-order function *)
+test
+"
+(fn x => (fn y => (((y (x ((x y) x) )).1) (fn x => (x+3))).1 ) )
+(fn x => (fn y => x) ) (fn x => (x 2, x 1))
+"
+
+[Value]
+true
+
+
+[Test]
+(* 8. recursion with pair *)
+test 
+"
+  (rec f x => 
+    ifp (x + (-1)) then 
+      1
+    else (
+      (rec g y => 
+        (ifp y.2 then 
+          ((y.1) + (y.2))
+        else 
+          ((g ((y.1 + (-3)), y.2)) + 1))
+      ) (f (x + 1), f (x + 3)) 
+    )
+  ) -4
+"
+
+[Value]
+true
+
+[Test]
+(* 9. recursion with high order function *)
+test 
+"
+  (fn f => f (f (-6)))
+  (rec sum x => (ifp x then (sum (x + 1) + x) else
+    (ifp (x + 2) then (0) else (sum (x + 2) + x))
+  ))
+"
+
+[Value]
+true
+
+[Test]
+(* 10. Application Function *)
+test "(fn f => f 10) ((fn x => (fn y => x + y)) 5)"
+
+[Value]
+true
+
+[Test]
+(* 11. Argument Scope *)
+test "
+ifp ((fn p => p.1) (1,2))
+then ((fn p => p.1) ((fn p => p.1) ((fn p => p.1) (((3,4).1,5),6),7) ))
+else ((fn p => p.1) (8,9))
+"
+
+[Value]
+true
+
+[Test]
+(* 12. Sum recursion with Pair *)
+test "
+(rec f x => ifp (x.1) then (x.2.1+(f (x.2.2))) else (x.2))
+(1,(10,(2,(20,(3,(30,(0,40)))))))
+"
+
+[Value]
+true
+
+[Test]
+(* 13. call/cc pair select *)
+test_callcc "
+callcc (fn ret => (2, ret 42).1)
+" 42
+
+[Value]
+true
+
+[Test]
+(* 14. call/cc ifp *)
+test_callcc "
+callcc (fn ret => ifp 0 then ret 1 else 42)
+" 42
+
+[Value]
+true
+
+[Test]
+(* 15. call/cc ifp *)
+test_callcc "
+callcc (fn ret => ifp 0 then 1 else ret 42)
+" 42
+
+[Value]
+true
+
+[Test]
+(* 16. call/cc app *)
+test_callcc "
+callcc (fn ret => (fn x => (x + (ret 42))) -1)
+" 42
+
+[Value]
+true
+
+[Test]
+(* 17. call/cc multiple app *)
+test_callcc "
+callcc (fn ret => (fn z => (fn y => (fn x => (ret x) + y + z))) 4 2 42)
+" 42
+
+[Value]
+true
+
+[Test]
+(* 18. call/cc multiple recursion *)
+test_callcc "
+callcc (fn ret => (rec f x => ifp x then x + f (x + (-2)) else (ret 42)) 11)
+" 42
+
+[Value]
+true
+
+[Test]
+(* 19. call/cc argument scope *)
+test_callcc "
+callcc (fn ret => 
+ifp ((fn p => p.1) (1,2))
+then ((fn p => p.1) ((fn p => p.1) ((fn p => p.1) (((3,4).1,(ret 42)),6),7) ))
+else ((fn p => p.1) (8,9))
+)
+" 42
+
+[Value]
+true
+
+[Test]
+(* 20. call/cc Sum recursion with Pair *)
+test_callcc "
+callcc (fn ret => 
+(rec f x => ifp (x.1) then (x.2.1+(f (x.2.2))) else (ret (x.2)))
+(1,(10,(2,(20,(3,(30,(0,42)))))))
+)
+" 42
+
+[Value]
+true

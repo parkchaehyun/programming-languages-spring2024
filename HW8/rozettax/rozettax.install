@@ -1,0 +1,11 @@
+lib: [
+  "_build/install/default/lib/rozettax/META"
+  "_build/install/default/lib/rozettax/dune-package"
+  "_build/install/default/lib/rozettax/opam"
+]
+bin: [
+  "_build/install/default/bin/rozettax"
+]
+doc: [
+  "_build/install/default/doc/rozettax/README.md"
+]

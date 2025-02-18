@@ -1,0 +1,94 @@
+[Header]
+
+let check_exception m = 
+  try (let _ = getReady m in false) with IMPOSSIBLE -> true
+
+let check_answer m ans = 
+  let res = List.sort compare (getReady m) in
+  let ans = List.sort compare ans in
+  res = ans
+
+[Test]
+(* 1 : base case *)
+check_answer
+(End StarBox)
+[Bar]
+
+[Value]
+true
+
+[Test]
+(* 2 : base case *)
+check_answer
+(End (NameBox "a"))
+[Bar]
+
+[Value]
+true
+
+[Test]
+(* 3 : base case *)
+check_answer
+(Guide ("x", End (NameBox "x")))
+[Bar]
+
+[Value]
+true
+
+[Test]
+(* 4 : base case *)
+check_answer
+(Branch (Guide ("a", End (NameBox "a")), End StarBox))
+[Bar]
+
+[Value]
+true
+
+[Test]
+(* 5 *)
+check_exception (Branch (End StarBox, End StarBox))
+
+[Value]
+true
+
+[Test]
+(* 6 *)
+check_answer 
+(Branch (Guide ("x", End (NameBox "x")), Guide ("y", End (NameBox "y"))))
+[Bar; (Node (Bar, Bar))]
+
+[Value]
+true
+
+[Test]
+(* 7 *)
+check_exception
+(Branch (Guide ("b", (Branch (End (NameBox "b"), End (NameBox "b")))), (End StarBox)))
+
+[Value]
+true
+
+[Test]
+(* 8 *)
+check_answer
+(Branch(Branch(Branch(Branch(End (NameBox "a"), End(NameBox "b")),End(NameBox "c")),Branch (End (NameBox "d"),End(NameBox "e"))),End StarBox))
+[Node (Bar, Bar); Bar; Node (Bar, Node (Bar, Node (Bar, Node (Bar, Bar))))]
+
+[Value]
+true
+
+[Test]
+(* 9 *)
+check_exception (Branch (Guide ("c", Branch (Branch(Guide ("a", Branch (End (NameBox "a"), End (NameBox "b"))), Branch (End (NameBox "b"), End (NameBox "a"))), End (NameBox "c"))), End StarBox))
+
+[Value]
+true
+
+[Test]
+(* 10 *)
+check_answer
+(Branch(Branch(Branch(Branch(End (NameBox "a"), End(NameBox "b")),End(NameBox "c")),Branch (Branch (End (NameBox "d"), End(NameBox "c")),End(NameBox "f"))),Branch(End (NameBox "b"), End StarBox)))
+[Node (Bar, Node (Bar, Bar)); Bar; Node (Bar, Bar); Node (Node (Bar, Bar), Node (Bar, Node (Bar, Node (Bar, Bar))))]
+
+[Value]
+true

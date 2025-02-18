@@ -1,0 +1,15 @@
+type token =
+    RP
+  | LP
+  | LET
+  | LAMBDA
+  | IN
+  | ID of bytes
+  | EQUAL
+  | EOF
+  | DOT
+  | APP
+val menhir_begin_marker : int
+val xv_program : Lambda__Lexp.t_let
+val xv_exp : Lambda__Lexp.t_let
+val menhir_end_marker : int

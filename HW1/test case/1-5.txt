@@ -1,0 +1,89 @@
+[Header]
+
+let rec ta_crazy3val : crazy3 -> int =
+ fun c ->
+  match c with
+  | NIL -> 0
+  | TWO c -> 2 + (3 * ta_crazy3val c)
+  | MTWO c -> -2 + (3 * ta_crazy3val c)
+  | ONE c -> 1 + (3 * ta_crazy3val c)
+  | MONE c -> -1 + (3 * ta_crazy3val c)
+  | ZERO c -> 3 * ta_crazy3val c
+
+let cr0 = ONE (ONE (ONE NIL)) (* 13 *)
+let cr1 = MONE (ONE (ZERO (ZERO NIL))) (* 2 *)
+let cr2 = MONE (TWO (TWO NIL)) (* 23 *)
+let cr3 = TWO (MONE (ZERO (ONE (MTWO NIL)))) (* -136 *)
+let cr4 = MTWO (ONE (ZERO (MONE (TWO NIL)))) (* +136 *)
+let cr5 = MTWO (MTWO (MTWO (MTWO (MTWO (MTWO (MTWO (MTWO (MTWO (MTWO (ONE NIL)))))))))) (* +1 *)
+let cr6 = TWO (TWO (TWO (TWO (TWO (TWO (TWO (TWO (TWO (TWO (MONE NIL)))))))))) (* -1 *)
+
+[Test]
+(* test 0 *)
+ta_crazy3val (crazy3add (cr0, cr0))
+
+[Value]
+26
+
+[Test]
+(* test 1 *)
+ta_crazy3val (crazy3add (cr0, cr1))
+
+[Value]
+15
+
+[Test]
+(* test 2 *)
+ta_crazy3val (crazy3add (cr1, cr2))
+
+[Value]
+25
+
+[Test]
+(* test 3 *)
+ta_crazy3val (crazy3add (cr2, cr3))
+
+[Value]
+-113
+
+[Test]
+(* test 4 *)
+ta_crazy3val (crazy3add (cr3, cr4))
+
+[Value]
+0
+
+[Test]
+(* test 5 *)
+ta_crazy3val (crazy3add (cr5, cr6))
+
+[Value]
+0
+
+[Test]
+(* test 6 *)
+ta_crazy3val (crazy3add (cr1, cr6))
+
+[Value]
+1
+
+[Test]
+(* test 7 *)
+ta_crazy3val (crazy3add (cr5, cr5))
+
+[Value]
+2
+
+[Test]
+(* test 8 *)
+ta_crazy3val (crazy3add (cr3, cr5))
+
+[Value]
+-135
+
+[Test]
+(* test 9 *)
+ta_crazy3val (crazy3add (cr6, cr6))
+
+[Value]
+-2

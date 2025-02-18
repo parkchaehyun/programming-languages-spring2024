@@ -1,0 +1,17 @@
+# dune build --release
+# OCAMLPARAM: unset
+# Shared cache: disabled
+# Shared cache location: /Users/park/.cache/dune/db
+# Workspace root:
+# "/Users/park/Library/CloudStorage/OneDrive-\225\132\128\225\133\162\225\132\139\225\133\181\225\134\171/\225\132\134\225\133\174\225\134\171\225\132\137\225\133\165/\225\132\137\225\133\174\225\132\139\225\133\165\225\134\184/2024-1/\225\132\145\225\133\179\225\132\133\225\133\169\225\132\128\225\133\179\225\132\133\225\133\162\225\132\134\225\133\181\225\134\188\225\132\139\225\133\165\225\134\171\225\132\139\225\133\165/2024/HW8/nutritious"
+# Auto-detected concurrency: 8
+# Dune context:
+#  { name = "default"
+#  ; kind = "default"
+#  ; profile = Release
+#  ; merlin = true
+#  ; fdo_target_exe = None
+#  ; build_dir = In_build_dir "default"
+#  ; instrument_with = []
+#  }
+$ /Users/park/.opam/4.02.3/bin/ocamlc.opt -config > /var/folders/md/r97yzzq11wsg7jl877gh8w8c0000gn/T/dune_4a01b3_output

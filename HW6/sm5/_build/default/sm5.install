@@ -1,0 +1,12 @@
+lib: [
+  "_build/install/default/lib/sm5/META"
+  "_build/install/default/lib/sm5/dune-package"
+  "_build/install/default/lib/sm5/opam"
+]
+bin: [
+  "_build/install/default/bin/gc_test"
+  "_build/install/default/bin/sm5"
+]
+doc: [
+  "_build/install/default/doc/sm5/README.md"
+]

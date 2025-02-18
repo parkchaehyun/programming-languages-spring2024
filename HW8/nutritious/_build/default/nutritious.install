@@ -1,0 +1,11 @@
+lib: [
+  "_build/install/default/lib/nutritious/META"
+  "_build/install/default/lib/nutritious/dune-package"
+  "_build/install/default/lib/nutritious/opam"
+]
+bin: [
+  "_build/install/default/bin/nutritious"
+]
+doc: [
+  "_build/install/default/doc/nutritious/README.md"
+]

@@ -1,0 +1,84 @@
+[Header]
+
+[Test]
+(* test 0 *)
+eval TRUE
+
+[Value]
+true
+
+[Test]
+(* test 1 *)
+eval (IMPLY (FALSE, TRUE))
+
+[Value]
+true
+
+[Test]
+(* test 2 *)
+eval (ANDALSO (ORELSE (TRUE, FALSE), NOT (IMPLY (TRUE, FALSE))))
+
+[Value]
+true
+
+[Test]
+(* test 3 *)
+eval
+  (ANDALSO
+      ( ANDALSO
+          ( ANDALSO (ANDALSO (TRUE, TRUE), NOT (ANDALSO (TRUE, FALSE))),
+            NOT (ANDALSO (FALSE, TRUE)) ),
+        NOT (ANDALSO (FALSE, FALSE)) ))
+
+[Value]
+true
+
+[Test]
+(* test 4 *)
+eval
+  (ANDALSO
+      ( ANDALSO
+          ( ANDALSO (ORELSE (TRUE, TRUE), ORELSE (TRUE, FALSE)),
+            ORELSE (FALSE, TRUE) ),
+        NOT (ORELSE (FALSE, FALSE)) ))
+
+[Value]
+true
+
+[Test]
+(* test 5 *)
+eval
+  (ANDALSO
+      ( ANDALSO (IMPLY (TRUE, TRUE), NOT (IMPLY (TRUE, FALSE))),
+        ANDALSO (IMPLY (FALSE, TRUE), IMPLY (FALSE, FALSE)) ))
+
+[Value]
+true
+
+[Test]
+(* test 6 *)
+eval (LESS (NUM 5, PLUS (NUM 1, NUM 6)))
+
+[Value]
+true
+
+[Test]
+(* test 7 *)
+eval (LESS (PLUS (NUM 3, NUM 5), PLUS (NUM 1, NUM 2)))
+
+[Value]
+false
+
+[Test]
+(* test 8 *)
+eval (LESS (MINUS (NUM 10, NUM 1), MINUS (NUM 1, NUM 2)))
+
+[Value]
+false
+
+[Test]
+(* test 9 *)
+eval (IMPLY (LESS (NUM 1, NUM 0), ANDALSO (TRUE, ORELSE (NOT TRUE, LESS (NUM 2, NUM 1)))))
+
+[Value]
+true
